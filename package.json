@@ -12,10 +12,12 @@
     "db:drop": "drizzle-kit drop --config drizzle.config.ts"
   },
   "dependencies": {
+    "@auth/drizzle-adapter": "^1.7.4",
     "@neondatabase/serverless": "^0.10.4",
     "dotenv": "^16.4.7",
     "drizzle-orm": "^0.39.3",
     "next": "15.1.7",
+    "next-auth": "^5.0.0-beta.25",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
