@@ -9,6 +9,11 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
+import { useAction } from "next-safe-action/hooks"
+import { login } from '@/server/actions/login-action';
+import { cn } from '@/lib/utils';
+
+
 const Login = () => {
     const form = useForm({
         resolver: zodResolver(loginSchema),
@@ -18,9 +23,13 @@ const Login = () => {
         }
     })
 
+    const { execute, status, result } = useAction(login)
+
     const onSubmit = (values: z.infer<typeof loginSchema>) => {
-        console.log(values)
+        const { email, password } = values
+        execute({ email, password })
     }
+
     return (
         <AuthForm formTitle={'Login to your account'} footerLabel={'Don\'t have an account?'} showProvider={true} footerHerf={'/auth/register'} >
             <Form {...form} >
@@ -43,7 +52,7 @@ const Login = () => {
                                 <FormMessage />
                             </FormItem>)} />
                         <Button size={"sm"} variant={"link"} className='pl-0 mb-1'><Link href={"/auth/reset"}>Forget password</Link></Button>
-                        <Button type='submit' className='w-full mb-4'>Login</Button>
+                        <Button type='submit' className={cn("w-full mb-4", status === "executing" && "animate-pulse")}>Login</Button>
                     </div>
                 </form>
             </Form>

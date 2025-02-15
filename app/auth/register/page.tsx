@@ -6,8 +6,11 @@ import * as z from "zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import Link from 'next/link';
 import { registerSchema } from '@/types/register-schema';
+
+import { useAction } from "next-safe-action/hooks"
+import { register } from '@/server/actions/register-action';
+import { cn } from '@/lib/utils';
 
 const Register = () => {
     const form = useForm({
@@ -19,9 +22,13 @@ const Register = () => {
         }
     })
 
+    const { execute, status, result } = useAction(register)
+
     const onSubmit = (values: z.infer<typeof registerSchema>) => {
-        console.log(values)
+        const { name, email, password } = values
+        execute({ name, email, password })
     }
+
     return (
         <AuthForm formTitle={'Register new Account'} footerLabel={'Already have an account?'} showProvider={true} footerHerf={'/auth/login'} >
             <Form {...form} >
@@ -51,7 +58,7 @@ const Register = () => {
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>)} />
-                        <Button type='submit' className='w-full my-4'>Register</Button>
+                        <Button type='submit' className={cn("w-full my-4", status === "executing" && "animate-pulse")}>Register</Button>
                     </div>
                 </form>
             </Form>
