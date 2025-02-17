@@ -2,13 +2,15 @@ import { timestamp, pgTable, text, primaryKey, integer, boolean, pgEnum } from "
 import type { AdapterAccountType } from "next-auth/adapters"
 export const RoleEnum = pgEnum("roles", ["user", "admin"])
 
+import { createId } from '@paralleldrive/cuid2'
+
 export const users = pgTable("user", {
-    id: text("id")
-        .primaryKey()
-        .$defaultFn(() => crypto.randomUUID()),
+    id: text("id").primaryKey()
+        .$defaultFn(() => createId()),
     name: text("name"),
     email: text("email").unique(),
     emailVerified: timestamp("emailVerified", { mode: "date" }),
+    password: text("password"),
     image: text("image"),
     isTwoFactorEnabled: boolean("isTwoFactorEnabled").default(false),
     role: RoleEnum("roles").default("user")
@@ -17,8 +19,7 @@ export const users = pgTable("user", {
 export const accounts = pgTable(
     "account",
     {
-        userId: text("userId")
-            .notNull()
+        userId: text("userId").notNull()
             .references(() => users.id, { onDelete: "cascade" }),
         type: text("type").$type<AdapterAccountType>().notNull(),
         provider: text("provider").notNull(),
@@ -39,3 +40,17 @@ export const accounts = pgTable(
         },
     ]
 )
+
+export const emailVerificationToken = pgTable(
+    "email_verification_token",
+    {
+        id: text("id").notNull()
+            .$defaultFn(() => createId()),
+        token: text("token").notNull(),
+        expires: timestamp("expires", { mode: "date" }).notNull(),
+        email: text("email").notNull(),
+    },
+    (vt) => ({
+        compoundKey: primaryKey({ columns: [vt.id, vt.token] }),
+    })
+);

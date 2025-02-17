@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import AppNav from "@/components/navigation/app-nav";
 
+import { Toaster } from "@/components/ui/sonner"
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -29,6 +31,7 @@ export default function RootLayout({
         <AppNav />
         <section>
           {children}
+          <Toaster position="top-center" richColors closeButton />
         </section>
       </body>
     </html>
