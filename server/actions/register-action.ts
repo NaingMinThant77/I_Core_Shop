@@ -8,6 +8,7 @@ import { db } from "..";
 import { eq } from "drizzle-orm";
 import { users } from "../schema";
 import { generateEmailVerificationToken } from "./token";
+import { sendEmail } from "./emails";
 
 export const register = actionClient.schema(registerSchema).action(async ({ parsedInput: { name, email, password } }) => {
     const hashedPassword = await bcrypt.hash(password, 10)
@@ -18,6 +19,7 @@ export const register = actionClient.schema(registerSchema).action(async ({ pars
         if (!existingUser.emailVerified) {
             const verificationToken = await generateEmailVerificationToken(email)
             // send verfication email
+            await sendEmail(verificationToken[0].email, verificationToken[0].token, name.slice(0, 5))
 
             return { success: "Email verification resent." }
         }
@@ -30,6 +32,7 @@ export const register = actionClient.schema(registerSchema).action(async ({ pars
     const verificationToken = await generateEmailVerificationToken(email)
 
     // send verfication email
+    await sendEmail(verificationToken[0].email, verificationToken[0].token, name.slice(0, 5))
 
     return { success: "Email verifacation sent." }
 })
