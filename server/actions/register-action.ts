@@ -17,13 +17,14 @@ export const register = actionClient.schema(registerSchema).action(async ({ pars
     const existingUser = await db.query.users.findFirst({ where: eq(users.email, email) })
     if (existingUser) {
         if (!existingUser.emailVerified) {
-            const verificationToken = await generateEmailVerificationToken(email)
-            // send verfication email
-            await sendEmail(verificationToken[0].email, verificationToken[0].token, name.slice(0, 5))
+            // generate verification token for email expxires in 30 minutes
+            const verificationToken = await generateEmailVerificationToken(email);
+            // send verification email
+            await sendEmail(verificationToken[0].email, verificationToken[0].token, name.slice(0, 5));
 
-            return { success: "Email verification resent." }
+            return { success: "Email verification resent." };
         }
-        return { error: "Email is already exists." }
+        return { error: "Email is already exists." };
     }
 
     // record user

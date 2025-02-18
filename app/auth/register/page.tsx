@@ -26,14 +26,19 @@ const Register = () => {
     const { execute, status, result } = useAction(register, {
         onSuccess({ data }) {
             form.reset();
-            toast.success(data?.success, {
-                action: {
-                    label: "Open Gmail",
-                    onClick: () => {
-                        window.open("https://mail.google.com", "_blank")
+            if (data?.error) {
+                toast.error(data?.error)
+            }
+            if (data?.success) {
+                toast.success(data?.success, {
+                    action: {
+                        label: "Open Gmail",
+                        onClick: () => {
+                            window.open("https://mail.google.com", "_blank")
+                        }
                     }
-                }
-            });
+                });
+            }
         }
     })
 
@@ -71,7 +76,7 @@ const Register = () => {
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>)} />
-                        <Button type='submit' className={cn("w-full my-4", status === "executing" && "animate-pulse")}>Register</Button>
+                        <Button type='submit' disabled={status === "executing"} className={cn("w-full my-4", status === "executing" && "animate-pulse")}>Register</Button>
                     </div>
                 </form>
             </Form>

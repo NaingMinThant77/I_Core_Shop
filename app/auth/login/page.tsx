@@ -52,7 +52,7 @@ const Login = () => {
                                 <FormMessage />
                             </FormItem>)} />
                         <Button size={"sm"} variant={"link"} className='pl-0 mb-1'><Link href={"/auth/reset"}>Forget password</Link></Button>
-                        <Button type='submit' className={cn("w-full mb-4", status === "executing" && "animate-pulse")}>Login</Button>
+                        <Button type='submit' disabled={status === "executing"} className={cn("w-full mb-4", status === "executing" && "animate-pulse")}>Login</Button>
                     </div>
                 </form>
             </Form>
