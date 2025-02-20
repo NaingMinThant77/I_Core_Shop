@@ -12,6 +12,7 @@ import Link from 'next/link';
 import { useAction } from "next-safe-action/hooks"
 import { login } from '@/server/actions/login-action';
 import { cn } from '@/lib/utils';
+import { toast } from 'sonner';
 
 
 const Login = () => {
@@ -23,7 +24,17 @@ const Login = () => {
         }
     })
 
-    const { execute, status, result } = useAction(login)
+    const { execute, status, result } = useAction(login, {
+        onSuccess({ data }) {
+            form.reset();
+            if (data?.error) {
+                toast.error(data?.error)
+            }
+            if (data?.success) {
+                toast.success(data?.success);
+            }
+        }
+    })
 
     const onSubmit = (values: z.infer<typeof loginSchema>) => {
         const { email, password } = values
