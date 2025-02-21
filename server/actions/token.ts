@@ -82,3 +82,15 @@ export const generatePasswordResetToken = async (email: string) => {
     const passwordResetToken = await db.insert(resetPasswordToken).values({ email, token, expires }).returning()
     return passwordResetToken;
 }
+
+export const checkPasswordResetToken = async (token: string) => {
+    try {
+        const resetPasswordPassword = await db.query.resetPasswordToken.findFirst({
+            where: eq(resetPasswordToken.token, token)
+        })
+
+        return resetPasswordPassword
+    } catch (error) {
+        return null
+    }
+}

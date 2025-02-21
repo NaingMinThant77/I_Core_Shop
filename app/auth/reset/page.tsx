@@ -8,7 +8,6 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 
 import { useAction } from "next-safe-action/hooks"
-import { register } from '@/server/actions/register-action';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import { resetPasswordSchema } from '@/types/resetpassword-schema';
@@ -55,7 +54,7 @@ const ResetPassword = () => {
                             <FormItem>
                                 <FormLabel>Email</FormLabel>
                                 <FormControl>
-                                    <Input placeholder='snapshot@gmail.com' {...field} />
+                                    <Input placeholder='snapshot@gmail.com' {...field} disabled={status === "executing"} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>)} />
