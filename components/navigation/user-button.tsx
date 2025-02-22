@@ -6,10 +6,11 @@ import { LogIn, LogOut, Settings, Truck } from "lucide-react"
 import Link from "next/link"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu"
-// npx shadcn@latest add dropdown-menu
-// npx shadcn@latest add avatar
+
+import { useRouter } from "next/navigation"
 
 const UserButton = ({ user }: Session) => {
+    const router = useRouter()
     return (
         <div>
             {
@@ -37,7 +38,7 @@ const UserButton = ({ user }: Session) => {
                                 <Truck size={20} className="group-hover:translate-x-1 group-hover:text-primary transition-all duration-300 ease-in-out" />
                                 <span className="text-sm font-medium">My Orders</span>
                             </DropdownMenuItem>
-                            <DropdownMenuItem className="cursor-pointer group hover:!bg-primary/10">
+                            <DropdownMenuItem className="cursor-pointer group hover:!bg-primary/10" onClick={() => router.push("/dashboard/settings")}>
                                 <Settings size={20} className="group-hover:rotate-180 group-hover:text-primary transition-all duration-300 ease-in-out" />
                                 <span className="text-sm font-medium">Settings</span>
                             </DropdownMenuItem>
