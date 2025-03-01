@@ -13,6 +13,7 @@ import { toast } from 'sonner';
 import { changePasswordSchema } from '@/types/chagepassword-schema';
 import { changePassword } from '@/server/actions/change-password';
 import { useSearchParams } from 'next/navigation';
+import { signOut } from "next-auth/react"
 
 const ChangePassword = () => {
     const form = useForm({
@@ -32,6 +33,7 @@ const ChangePassword = () => {
                 toast.error(data?.error)
             }
             if (data?.success) {
+                signOut({ callbackUrl: "/auth/login" });
                 toast.success(data?.success);
             }
         }
