@@ -1,19 +1,27 @@
+"use client"
 import { Session } from 'next-auth'
-import React from 'react'
+import React, { useState } from 'react'
 import SettingCard from './setting-card'
-import Image from 'next/image'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 import { UserRoundPen } from 'lucide-react'
 
 // npx shadcn@latest add dialog
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog'
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog'
 import { Button } from '../ui/button'
+
+// npx shadcn@latest add drawer
+import useMediaQuery from '@/hooks/useMediaQuery'
+import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from '../ui/drawer'
+import ProfileForm from './profile-form'
 
 type profileCardProps = {
     session: Session
 }
 const ProfileCard = ({ session }: profileCardProps) => {
-    console.log(session)
+    const isDesktop = useMediaQuery('(min-width: 768px)');
+    const [isOpen, setIsOpen] = useState(false);
+    const handleIsOpen = () => setIsOpen(false);
+
     return (
         <SettingCard >
             <div className='flex items-start gap-2 justify-between'>
@@ -27,18 +35,38 @@ const ProfileCard = ({ session }: profileCardProps) => {
                         <p className='text-sm font-medium text-muted-foreground'>{session.user?.email}</p>
                     </div>
                 </div>
-                <Dialog>
-                    <DialogTrigger>
-                        <UserRoundPen className='w-5 h-5 text-muted-foreground hover:text-black cursor-pointer' />
-                    </DialogTrigger>
-                    <DialogContent className='mx-4 lg:mx-0'>
-                        <DialogHeader>
-                            <DialogTitle>Wanna update your profile?</DialogTitle>
-                            <input type="text" className='w-full my-6' />
-                            <Button>Save Changes</Button>
-                        </DialogHeader>
-                    </DialogContent>
-                </Dialog>
+                {
+                    isDesktop ? <Dialog open={isOpen} onOpenChange={setIsOpen}>
+                        <DialogTrigger asChild>
+                            <UserRoundPen className='w-5 h-5 text-muted-foreground hover:text-black cursor-pointer' />
+                        </DialogTrigger>
+                        <DialogContent className='mx-4 lg:mx-0'>
+                            <DialogHeader>
+                                <DialogTitle>Edit Profile</DialogTitle>
+                                <DialogDescription>This will be public display name.</DialogDescription>
+                            </DialogHeader>
+                            <ProfileForm name={session.user?.name!} email={session.user?.email!} setIsOpen={handleIsOpen} />
+                            <DialogClose asChild>
+                                <Button variant="outline" className='w-full'>Cancel</Button>
+                            </DialogClose>
+
+                        </DialogContent>
+                    </Dialog> : <Drawer open={isOpen} onOpenChange={setIsOpen}>
+                        <DrawerTrigger asChild><UserRoundPen className='w-5 h-5 text-muted-foreground hover:text-black cursor-pointer' /></DrawerTrigger>
+                        <DrawerContent>
+                            <DrawerHeader>
+                                <DrawerTitle>Edit Profile</DrawerTitle>
+                                <DrawerDescription>This will be public display name.</DrawerDescription>
+                            </DrawerHeader>
+                            <ProfileForm name={session.user?.name!} email={session.user?.email!} setIsOpen={handleIsOpen} />
+                            <DrawerFooter>
+                                <DrawerClose asChild>
+                                    <Button variant="outline" className='w-full'>Cancel</Button>
+                                </DrawerClose>
+                            </DrawerFooter>
+                        </DrawerContent>
+                    </Drawer>
+                }
 
             </div>
         </SettingCard>
@@ -46,4 +74,3 @@ const ProfileCard = ({ session }: profileCardProps) => {
 }
 
 export default ProfileCard
-
