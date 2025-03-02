@@ -16,8 +16,23 @@ export const users = pgTable("user", {
     role: RoleEnum("roles").default("user")
 })
 
-export const accounts = pgTable(
-    "account",
+export const twoFactorToken = pgTable("two_factor_token",
+    {
+        id: text("id").notNull().$defaultFn(() => createId()),
+        token: text("token").notNull(),
+        expires: timestamp("expires", { mode: "date" }).notNull(),
+        email: text("email").notNull(),
+        userId: text("userId").references(() => users.id, { onDelete: "cascade" })
+    }, (token) => [
+        {
+            compoundKey: primaryKey({
+                columns: [token.id, token.token],
+            }),
+        },
+    ]
+)
+
+export const accounts = pgTable("account",
     {
         userId: text("userId").notNull()
             .references(() => users.id, { onDelete: "cascade" }),
@@ -68,3 +83,4 @@ export const resetPasswordToken = pgTable(
         compoundKey: primaryKey({ columns: [vt.id, vt.token] }),
     })
 );
+

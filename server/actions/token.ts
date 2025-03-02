@@ -1,8 +1,10 @@
 "use server"
 
 import { eq } from 'drizzle-orm';
-import { emailVerificationToken, users, resetPasswordToken } from './../schema';
+import { emailVerificationToken, users, resetPasswordToken, twoFactorToken } from './../schema';
 import { db } from '..';
+
+import crypto from 'crypto';
 
 const checkEmailVerificationToken = async (email: string | null, token?: string) => {
     try {
@@ -92,5 +94,34 @@ export const checkPasswordResetToken = async (token: string) => {
         return resetPasswordPassword
     } catch (error) {
         return null
+    }
+}
+
+export const getTwoFactorCodeByEmail = async (email: string) => {
+    try {
+        const existingCode = await db.query.twoFactorToken.findFirst({
+            where: eq(twoFactorToken.email, email),
+        })
+
+        return existingCode
+    } catch (error) {
+        return null;
+    }
+}
+
+export const generateTwoFactorToken = async (email: string) => {
+    try {
+        const code = crypto.randomInt(100000, 1000000).toString();
+        const expires = new Date(new Date().getTime() + 30 * 60 * 1000); // 30 min
+
+        const existingCode = await getTwoFactorCodeByEmail(email)
+        if (existingCode) {
+            await db.delete(twoFactorToken).where(eq(twoFactorToken.id, existingCode.id))
+        }
+
+        const twoFactorCode = await db.insert(twoFactorToken).values({ email, token: code, expires }).returning()
+        return twoFactorCode
+    } catch (error) {
+        return null;
     }
 }

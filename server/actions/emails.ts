@@ -5,6 +5,7 @@ const currentBaseUrl = getBaseUrl()
 import { EmailConfirmationTemplate } from '@/components/email-template';
 import { Resend } from 'resend';
 import ResetPasswordEmail from "@/components/password-reset-email";
+import MagicCodeEmail from "@/components/two-factor-mail";
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const sendEmail = async (email: string, token: string, userFirstname: string) => {
@@ -34,6 +35,19 @@ export const sendPasswordResetEmail = async (email: string, token: string) => {
         react: ResetPasswordEmail({
             resePasswordLink: resetLink
         })
+    });
+
+    if (error) {
+        console.log(error);
+    }
+}
+
+export const sendTwoFactorEmail = async (email: string, code: string) => {
+    const { error } = await resend.emails.send({
+        from: 'onboarding@resend.dev',
+        to: email,
+        subject: 'Two Factor Authentication Code - SnapShop',
+        react: MagicCodeEmail({ code })
     });
 
     if (error) {

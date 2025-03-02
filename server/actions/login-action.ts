@@ -3,14 +3,14 @@
 import { loginSchema } from "@/types/login-schema"
 import { actionClient } from "./safe-action"
 import { eq } from "drizzle-orm"
-import { users } from "../schema"
+import { twoFactorToken, users } from "../schema"
 import { db } from ".."
-import { generateEmailVerificationToken } from "./token"
-import { sendEmail } from "./emails"
+import { generateEmailVerificationToken, generateTwoFactorToken, getTwoFactorCodeByEmail } from "./token"
+import { sendEmail, sendTwoFactorEmail } from "./emails"
 import { signIn } from "../auth"
 import { AuthError } from "next-auth"
 
-export const login = actionClient.schema(loginSchema).action(async ({ parsedInput: { email, password } }) => {
+export const login = actionClient.schema(loginSchema).action(async ({ parsedInput: { email, password, code } }) => {
     try {
         // check email
         const existingUser = await db.query.users.findFirst({ where: eq(users.email, email) })
@@ -25,8 +25,26 @@ export const login = actionClient.schema(loginSchema).action(async ({ parsedInpu
             return { success: "Email verification resent." }
         }
 
-        await signIn('credentials', { email, password, redirectTo: "/" })
+        if (existingUser.isTwoFactorEnabled) {
+            if (code) {
+                const twoFactorCode = await getTwoFactorCodeByEmail(existingUser.email)
+                if (!twoFactorCode) return { error: "Invalid code!" }
+                if (code !== twoFactorCode.token) return { error: "Invalid code!" }
 
+                const isExpired = new Date() > new Date(twoFactorCode.expires);
+                if (isExpired) return { error: "Expired code!" }
+
+                await db.delete(twoFactorToken).where(eq(twoFactorToken.id, twoFactorCode.id))
+            } else {
+                const twoFactorCode = await generateTwoFactorToken(email);
+                if (!twoFactorCode) return { error: "Failed to generate 2FA code!" }
+
+                await sendTwoFactorEmail(twoFactorCode[0].email, twoFactorCode[0].token)
+                return { twoFactor: "Two Factor code sent." }
+            }
+        }
+
+        await signIn('credentials', { email, password, redirectTo: "/" })
         return { success: "Login successful." }
     } catch (error) {
         if (error instanceof AuthError) {
