@@ -9,3 +9,8 @@ export const twoFactorSchema = z.object({
     isTwoFactorEnabled: z.boolean(),
     email: z.string()
 })
+
+export const avatarSchema = z.object({
+    image: z.string().url({ message: "Please enter a valid image URL" }),
+    email: z.string().email({ message: "Please enter a valid email address" }),
+})

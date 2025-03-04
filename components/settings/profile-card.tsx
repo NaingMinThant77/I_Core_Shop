@@ -2,7 +2,6 @@
 import { Session } from 'next-auth'
 import React, { useState } from 'react'
 import SettingCard from './setting-card'
-import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 import { UserRoundPen } from 'lucide-react'
 
 // npx shadcn@latest add dialog
@@ -13,6 +12,7 @@ import { Button } from '../ui/button'
 import useMediaQuery from '@/hooks/useMediaQuery'
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from '../ui/drawer'
 import ProfileForm from './profile-form'
+import AvatarUploadForm from './avatar-upload-form'
 
 type profileCardProps = {
     session: Session
@@ -25,11 +25,8 @@ const ProfileCard = ({ session }: profileCardProps) => {
     return (
         <SettingCard >
             <div className='flex items-start gap-2 justify-between'>
-                <div className='flex items-center gap-2'>
-                    <Avatar className='w-12 h-12'>
-                        <AvatarImage src={session.user?.image!} alt="profile" />
-                        <AvatarFallback className="bg-primary text-white font-bold">{session.user?.name?.slice(0, 2).toUpperCase()}</AvatarFallback>
-                    </Avatar>
+                <div className='flex items-start gap-2'>
+                    <AvatarUploadForm name={session.user?.name ?? ""} image={session.user?.image} email={session.user?.email ?? ""} />
                     <div>
                         <h2 className='font-semibold text-lg'>{session.user?.name}</h2>
                         <p className='text-sm font-medium text-muted-foreground'>{session.user?.email}</p>

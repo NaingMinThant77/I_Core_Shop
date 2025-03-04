@@ -71,13 +71,6 @@ body[data-scroll-locked].mx-auto {
   padding-right: 1.5rem;
 }
 
-
-
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
+[data-ut-element="button"][data-state="uploading"]::after {
+  @apply bg-primary/80
 }
