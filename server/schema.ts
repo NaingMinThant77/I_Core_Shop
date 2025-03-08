@@ -1,7 +1,6 @@
-import { timestamp, pgTable, text, primaryKey, integer, boolean, pgEnum } from "drizzle-orm/pg-core"
+import { timestamp, pgTable, text, primaryKey, integer, boolean, pgEnum, serial, real } from "drizzle-orm/pg-core"
 import type { AdapterAccountType } from "next-auth/adapters"
 export const RoleEnum = pgEnum("roles", ["user", "admin"])
-
 import { createId } from '@paralleldrive/cuid2'
 
 export const users = pgTable("user", {
@@ -83,4 +82,13 @@ export const resetPasswordToken = pgTable(
         compoundKey: primaryKey({ columns: [vt.id, vt.token] }),
     })
 );
+
+export const products = pgTable("products", {
+    id: serial("id").primaryKey(),
+    title: text("title").notNull(),
+    description: text("description").notNull(),
+    price: real("price").notNull(),
+    image: text("image").notNull(),
+    createAt: timestamp("createAt", { mode: "date" }).defaultNow()
+})
 

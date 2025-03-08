@@ -1,10 +1,13 @@
 import React from 'react'
+import { auth } from '@/server/auth';
+import { redirect } from 'next/navigation';
+import CreateProductForm from './create-product-form';
 
-const CreateProduct = () => {
+const CreateProduct = async () => {
+    const session = await auth();
+    if (session?.user.role !== "admin") return redirect("/dashboard/settings")
     return (
-        <div>
-            CreateProduct
-        </div>
+        <CreateProductForm />
     )
 }
 

@@ -43,6 +43,13 @@
       "when": 1740890649716,
       "tag": "0005_romantic_nicolaos",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1741270975415,
+      "tag": "0006_daffy_punisher",
+      "breakpoints": true
     }
   ]
 }
