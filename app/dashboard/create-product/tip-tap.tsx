@@ -1,5 +1,5 @@
 "use client"
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import { Toggle } from '@/components/ui/toggle'
@@ -43,6 +43,10 @@ const TipTap = ({ val }: TiptapProps) => {
             })
         }
     })
+
+    useEffect(() => {
+        if (editor?.isEmpty) editor.commands.setContent(val)
+    }, [val])
 
     return <div className='space-y-2'>
         {editor && <div>
