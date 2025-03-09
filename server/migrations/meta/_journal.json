@@ -50,6 +50,13 @@
       "when": 1741270975415,
       "tag": "0006_daffy_punisher",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1741499463334,
+      "tag": "0007_plain_bishop",
+      "breakpoints": true
     }
   ]
 }

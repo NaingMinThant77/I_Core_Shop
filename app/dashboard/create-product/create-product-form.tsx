@@ -1,18 +1,22 @@
 "use client"
-import React from 'react'
+import React, { useEffect } from 'react'
 import * as z from "zod"
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from "react-hook-form"
 import { productSchema } from '@/types/product-schema'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { DollarSign } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import TipTap from './tip-tap'
-
+import { useAction } from 'next-safe-action/hooks'
+import { updateProduct } from '@/server/actions/products'
+import { toast } from 'sonner'
+import { useRouter } from "next/navigation";
 
 const CreateProductForm = () => {
+    const router = useRouter();
     const form = useForm<z.infer<typeof productSchema>>({
         resolver: zodResolver(productSchema),
         defaultValues: {
@@ -22,9 +26,27 @@ const CreateProductForm = () => {
         }
     })
 
+    const { execute, status, result } = useAction(updateProduct, {
+        onSuccess({ data }) {
+            if (data?.error) {
+                toast.error(data?.error)
+            }
+            if (data?.success) {
+                toast.success(data?.success);
+                form.reset()
+                router.push("/dashboard/products");
+            }
+        }
+    })
+
     const onSubmit = (values: z.infer<typeof productSchema>) => {
-        console.log(values)
-    }
+        const { title, id, description, price } = values;
+        execute({ title, id, description, price });
+    };
+
+    useEffect(() => {
+        form.setValue("description", "");
+    }, [form])
 
     return (
         <Card>
@@ -65,7 +87,7 @@ const CreateProductForm = () => {
                                 <FormMessage />
                             </FormItem>
                         )} />
-                        <Button type="submit" className='w-full'>Submit</Button>
+                        <Button type="submit" className='w-full' disabled={status === "executing"}>Submit</Button>
                     </form>
                 </Form>
             </CardContent>

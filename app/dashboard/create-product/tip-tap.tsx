@@ -12,7 +12,9 @@ type TiptapProps = {
 
 const TipTap = ({ val }: TiptapProps) => {
     const { setValue } = useFormContext()
+
     const editor = useEditor({
+        immediatelyRender: false,
         extensions: [
             StarterKit.configure({
                 orderedList: {
@@ -22,7 +24,7 @@ const TipTap = ({ val }: TiptapProps) => {
                     HTMLAttributes: { class: "list-disc pl-4" }
                 },
                 heading: {
-                    HTMLAttributes: { class: "text-2xl font-bold" },
+                    HTMLAttributes: { class: "text-xl font-bold" },
                     levels: [1]
                 },
             })
@@ -30,7 +32,7 @@ const TipTap = ({ val }: TiptapProps) => {
         content: val,
         editorProps: {
             attributes: {
-                class: "min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                class: "min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
             }
         },
         onUpdate: ({ editor }) => {
@@ -62,7 +64,7 @@ const TipTap = ({ val }: TiptapProps) => {
             <Toggle size={"sm"} pressed={editor.isActive("bulletList")} onPressedChange={() => editor.chain().focus().toggleBulletList().run()}>
                 <List className='h-4 w-4' />
             </Toggle>
-            <EditorContent editor={editor} className='prose lg:prose-xl' />
+            <EditorContent editor={editor} />
         </div>}
     </div>
 }
