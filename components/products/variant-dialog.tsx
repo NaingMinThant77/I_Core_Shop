@@ -10,7 +10,8 @@ import { VariantSchema } from '@/types/variant-schema'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form'
 import { Input } from '../ui/input'
 import { Button } from '../ui/button'
-import TagsInput from '@/app/dashboard/products/tags-input'
+import TagsInput from './tags-input'
+import VariantImages from './variant-images'
 
 type VariantDialogProps = {
     children: React.ReactNode,
@@ -40,7 +41,7 @@ const VariantDialog = ({ children, editMode, productID, variant }: VariantDialog
     return (
         <Dialog>
             <DialogTrigger>{children}</DialogTrigger>
-            <DialogContent>
+            <DialogContent className='h-[40rem] overflow-scroll'>
                 <DialogHeader>
                     <DialogTitle>{editMode ? "Update an existing" : "Create new"} product's variant                </DialogTitle>
                     <DialogDescription>Manage your products variants</DialogDescription>
@@ -74,6 +75,7 @@ const VariantDialog = ({ children, editMode, productID, variant }: VariantDialog
                                 <FormMessage />
                             </FormItem>
                         )} />
+                        <VariantImages />
                         <Button type="submit" className='w-full'>{editMode ? "Update" : "Create"} product's variant</Button>
                     </form>
                 </Form>
