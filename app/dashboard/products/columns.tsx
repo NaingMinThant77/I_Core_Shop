@@ -1,7 +1,7 @@
 "use client"
 import { ColumnDef, Row } from "@tanstack/react-table"
 import Image from "next/image"
-import { MoreHorizontal } from "lucide-react"
+import { CirclePlus, MoreHorizontal } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, } from "@/components/ui/dropdown-menu"
 import Link from "next/link"
@@ -9,6 +9,8 @@ import { useAction } from "next-safe-action/hooks"
 import { deleteProduct } from "@/server/actions/products"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation";
+import { VariantsWithImagesTags } from "@/lib/infer-type"
+import VariantDialog from "@/components/products/variant-dialog"
 
 export type Product = {
     id: number
@@ -16,7 +18,7 @@ export type Product = {
     title: string
     description: string
     image: string
-    variants: any
+    variants: VariantsWithImagesTags
 }
 
 const ActionCell = (row: Row<Product>) => {
@@ -74,6 +76,20 @@ export const columns: ColumnDef<Product>[] = [
     {
         accessorKey: "variants",
         header: "Variants",
+        cell: ({ row }) => {
+            const variants = row.getValue("variants") as VariantsWithImagesTags[];
+            return (<div>
+                {variants.map(variant => (
+                    <div key={variant.id}>
+                        <p>{variant.color}</p>
+                    </div>
+                ))}
+                <VariantDialog editMode={false} >
+                    <CirclePlus className="w-5 h-5 text-gray-500 hover:text-black duration-200 cursor-pointer" />
+                </VariantDialog>
+            </div>
+            )
+        }
     },
     {
         accessorKey: "title",
