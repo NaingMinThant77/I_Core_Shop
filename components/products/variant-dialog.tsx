@@ -1,6 +1,6 @@
 "use client"
 
-import React from 'react'
+import React, { useState } from 'react'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog'
 import { VariantsWithImagesTags } from '@/lib/infer-type'
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -12,6 +12,10 @@ import { Input } from '../ui/input'
 import { Button } from '../ui/button'
 import TagsInput from './tags-input'
 import VariantImages from './variant-images'
+import { useAction } from 'next-safe-action/hooks'
+import { toast } from 'sonner'
+import { createVariant } from '@/server/actions/variant'
+import { useRouter } from 'next/navigation'
 
 type VariantDialogProps = {
     children: React.ReactNode,
@@ -21,12 +25,14 @@ type VariantDialogProps = {
 }
 
 const VariantDialog = ({ children, editMode, productID, variant }: VariantDialogProps) => {
+    const [open, setOpen] = useState(false)
+    const router = useRouter()
     const form = useForm<z.infer<typeof VariantSchema>>({
         resolver: zodResolver(VariantSchema),
         defaultValues: {
             tags: [],
             variantImages: [],
-            color: "#000",
+            color: "#000000",
             productID,
             id: undefined,
             productType: "Black",
@@ -34,16 +40,32 @@ const VariantDialog = ({ children, editMode, productID, variant }: VariantDialog
         },
     })
 
+    const { execute, status, result } = useAction(createVariant, {
+        onSuccess({ data }) {
+            form.reset();
+            setOpen(false);
+            if (data?.error) {
+                toast.error(data?.error);
+            }
+            if (data?.success) {
+                toast.success(data?.success);
+                router.push("/dashboard/products");
+            }
+        },
+    });
+
+
     function onSubmit(values: z.infer<typeof VariantSchema>) {
-        console.log(values)
+        const { color, tags, id, variantImages, editMode, productID, productType } = values
+        execute({ color, tags, id, variantImages, editMode, productID, productType })
     }
 
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger>{children}</DialogTrigger>
             <DialogContent className='h-[40rem] overflow-scroll'>
                 <DialogHeader>
-                    <DialogTitle>{editMode ? "Update an existing" : "Create new"} product's variant                </DialogTitle>
+                    <DialogTitle>{editMode ? "Update an existing" : "Create new"} product's variant</DialogTitle>
                     <DialogDescription>Manage your products variants</DialogDescription>
                 </DialogHeader>
                 <Form {...form}>
@@ -76,7 +98,7 @@ const VariantDialog = ({ children, editMode, productID, variant }: VariantDialog
                             </FormItem>
                         )} />
                         <VariantImages />
-                        <Button type="submit" className='w-full'>{editMode ? "Update" : "Create"} product's variant</Button>
+                        <Button type="submit" className='w-full' disabled={status === "executing"}>{editMode ? "Update" : "Create"} product's variant</Button>
                     </form>
                 </Form>
             </DialogContent>
