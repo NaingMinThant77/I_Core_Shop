@@ -14,7 +14,7 @@ import TagsInput from './tags-input'
 import VariantImages from './variant-images'
 import { useAction } from 'next-safe-action/hooks'
 import { toast } from 'sonner'
-import { createVariant } from '@/server/actions/variant'
+import { createVariant, deleteVariant } from '@/server/actions/variant'
 import { useRouter } from 'next/navigation'
 
 type VariantDialogProps = {
@@ -81,6 +81,18 @@ const VariantDialog = ({ children, editMode, productID, variant }: VariantDialog
         getOldData();
     }, [editMode, variant])
 
+    const variantDelete = useAction(deleteVariant, {
+        onSuccess({ data }) {
+            if (data?.error) {
+                toast.error(data?.error);
+            }
+            if (data?.success) {
+                toast.success(data?.success);
+                router.push("/dashboard/products");
+            }
+        }
+    })
+
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger>{children}</DialogTrigger>
@@ -119,7 +131,13 @@ const VariantDialog = ({ children, editMode, productID, variant }: VariantDialog
                             </FormItem>
                         )} />
                         <VariantImages />
-                        <Button type="submit" className='w-full' disabled={status === "executing" || !form.formState.isValid} >{editMode ? "Update" : "Create"} product's variant</Button>
+                        <div className='flex gap-2'>
+                            <Button type="submit" className='w-full' disabled={status === "executing" || !form.formState.isValid} >{editMode ? "Update" : "Create"} product's variant</Button>
+                            {editMode && <Button type="button" variant={"destructive"} onClick={e => {
+                                e.preventDefault()
+                                variantDelete.execute({ id: variant?.id! })
+                            }} className='w-full' disabled={status === "executing" || !form.formState.isValid} >"Delete product's variant"</Button>}
+                        </div>
                     </form>
                 </Form>
             </DialogContent>

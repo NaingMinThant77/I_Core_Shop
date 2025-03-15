@@ -3,6 +3,7 @@ import { actionClient } from "./safe-action";
 import { products, productVariants, variantImages, variantTags } from "../schema";
 import { db } from "..";
 import { eq } from "drizzle-orm";
+import { z } from "zod";
 
 export const createVariant = actionClient.schema(VariantSchema).action(async ({ parsedInput: { color, tags, id, variantImages: vImgs, editMode, productID, productType } }) => {
     try {
@@ -48,6 +49,16 @@ export const createVariant = actionClient.schema(VariantSchema).action(async ({ 
             );
             return { success: `${product?.title}'s variants added.` }
         }
+    } catch (error) {
+        console.error("Database Error:", error);
+        return { error: "Something went wrong!" }
+    }
+})
+
+export const deleteVariant = actionClient.schema(z.object({ id: z.number() })).action(async ({ parsedInput: { id } }) => {
+    try {
+        await db.delete(productVariants).where(eq(productVariants.id, id))
+        return { success: "Variant deleted successfully" }
     } catch (error) {
         console.error("Database Error:", error);
         return { error: "Something went wrong!" }

@@ -29,7 +29,7 @@ const Products = async () => {
             title: product.title,
             description: product.description,
             variants: product.productVariants,
-            image: product.productVariants[0].variantImage[0].image_url,
+            image: product.productVariants[0].variantImage[0]?.image_url,
         };
     })
     return (
