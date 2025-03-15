@@ -30,7 +30,7 @@ const VariantDialog = ({ children, editMode, productID, variant }: VariantDialog
     const form = useForm<z.infer<typeof VariantSchema>>({
         resolver: zodResolver(VariantSchema),
         defaultValues: {
-            tags: [],
+            tags: ["iPhone", "iPad", "Macbook", "Apple Watch", "Accessories", "Cover"],
             variantImages: [],
             color: "#000000",
             productID,
@@ -83,6 +83,7 @@ const VariantDialog = ({ children, editMode, productID, variant }: VariantDialog
 
     const variantDelete = useAction(deleteVariant, {
         onSuccess({ data }) {
+            form.reset();
             if (data?.error) {
                 toast.error(data?.error);
             }

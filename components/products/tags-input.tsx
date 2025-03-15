@@ -24,7 +24,7 @@ const TagsInput = forwardRef<HTMLInputElement, TagsInputProps>(({ value, handleO
                     addNewTag()
                 }
             }} value={tagData} {...props} onChange={(e) => setTagData(e.target.value)} />
-            <div className='flex gap-1 my-2'>
+            <div className='flex gap-1 my-2 flex-wrap'>
                 {value.map((tag, index) => (
                     <div key={index} className='border-gray-400 border-2 p-1 rounded-md text-xs font-semibold flex items-center gap-1'>
                         <span >{tag}</span>

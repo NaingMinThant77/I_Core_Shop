@@ -16,7 +16,7 @@ const UserButton = ({ user }: Session) => {
             {
                 user?.email ?
                     <DropdownMenu modal={false}>
-                        <DropdownMenuTrigger>
+                        <DropdownMenuTrigger className="ring-0 border-2 border-primary rounded-full ">
                             <Avatar>
                                 <AvatarImage src={user.image!} />
                                 <AvatarFallback className="bg-primary text-white font-bold">{user.name?.slice(0, 2).toUpperCase()}</AvatarFallback>
