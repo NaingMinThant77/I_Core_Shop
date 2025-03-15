@@ -7,7 +7,28 @@ import { eq } from "drizzle-orm";
 export const createVariant = actionClient.schema(VariantSchema).action(async ({ parsedInput: { color, tags, id, variantImages: vImgs, editMode, productID, productType } }) => {
     try {
         if (editMode && id) {
-            console.log("Update variant")
+            const editVariant = await db.update(productVariants).set({
+                color, productType, updated: new Date(),
+            }).where(eq(productVariants.id, id)).returning();
+
+            await db.delete(variantTags).where(eq(variantTags.variantID, editVariant[0].id));
+            await db.insert(variantTags).values(tags.map((tag) => {
+                return { tag, variantID: editVariant[0].id, };
+            }));
+
+            await db.delete(variantImages).where(eq(variantImages.variantID, editVariant[0].id));
+
+            await db.insert(variantImages).values(vImgs.map((img, index) => {
+                return {
+                    image_url: img.url,
+                    size: img.size.toString(),
+                    name: img.name,
+                    variantID: editVariant[0].id,
+                    order: index,
+                };
+            })
+            );
+            return { success: `Variants updated.` };
         }
 
         if (!editMode) {

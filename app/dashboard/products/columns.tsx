@@ -70,7 +70,9 @@ export const columns: ColumnDef<Product>[] = [
         cell: ({ row }) => {
             const image = row.getValue("image") as string
             const title = row.getValue("title") as string
-            return <Image src={image} alt={title} width={50} height={50} />
+            return <div className="w-12 h-12 overflow-hidden">
+                <Image src={image} alt={title} width={50} height={50} className=" w-full h-full object-cover" />
+            </div>
         }
     },
     {
@@ -83,7 +85,6 @@ export const columns: ColumnDef<Product>[] = [
                     <VariantDialog key={v.id} editMode={true} variant={v} productID={row.original.id}>
                         <div className="w-5 h-5 rounded-full" style={{ backgroundColor: v.color }} />
                     </VariantDialog>
-
                 ))}
                 <VariantDialog editMode={false} productID={row.original.id}>
                     <CirclePlus className="w-5 h-5 text-gray-500 hover:text-black duration-200 cursor-pointer" />

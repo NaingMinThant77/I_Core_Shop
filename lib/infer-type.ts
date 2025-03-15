@@ -12,10 +12,10 @@ export type InferResultType<TableName extends keyof TSchema,
         TSchema, TSchema[TableName], { with: With }>
 
 export type VariantsWithImagesTags = InferResultType<
-    "productVariants", { variantImages: true; variantTags: true }>
+    "productVariants", { variantImage: true; variantTags: true }>
 
 export type ProductsWithVariants = InferResultType<
     "products", { productVariants: true }>
 
 export type VariantsWithProduct = InferResultType<
-    "productVariants", { variantImages: true; variantTags: true; product: true }>
+    "productVariants", { variantImage: true; variantTags: true; product: true }>

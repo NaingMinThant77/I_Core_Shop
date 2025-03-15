@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog'
 import { VariantsWithImagesTags } from '@/lib/infer-type'
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -53,12 +53,33 @@ const VariantDialog = ({ children, editMode, productID, variant }: VariantDialog
             }
         },
     });
-
-
     function onSubmit(values: z.infer<typeof VariantSchema>) {
         const { color, tags, id, variantImages, editMode, productID, productType } = values
         execute({ color, tags, id, variantImages, editMode, productID, productType })
     }
+
+    const getOldData = () => {
+        if (editMode && variant) {
+            form.setValue("editMode", true);
+            form.setValue("id", variant?.id);
+            form.setValue("color", variant?.color);
+            form.setValue("productType", variant?.productType);
+            form.setValue("tags", variant?.variantTags.map(t => t.tag));
+            form.setValue("variantImages",
+                variant?.variantImage?.map((img) => ({
+                    url: img.image_url,
+                    size: Number(img.size),
+                    name: img.name,
+                })) || []
+            );
+            form.setValue("productType", variant?.productType);
+            form.setValue("productID", variant.productID);
+        }
+    }
+
+    useEffect(() => {
+        getOldData();
+    }, [editMode, variant])
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
@@ -98,7 +119,7 @@ const VariantDialog = ({ children, editMode, productID, variant }: VariantDialog
                             </FormItem>
                         )} />
                         <VariantImages />
-                        <Button type="submit" className='w-full' disabled={status === "executing"}>{editMode ? "Update" : "Create"} product's variant</Button>
+                        <Button type="submit" className='w-full' disabled={status === "executing" || !form.formState.isValid} >{editMode ? "Update" : "Create"} product's variant</Button>
                     </form>
                 </Form>
             </DialogContent>
