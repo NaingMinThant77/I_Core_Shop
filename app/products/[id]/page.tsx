@@ -1,3 +1,4 @@
+import ImageSlider from '@/components/products/image-slider'
 import VariantPicker from '@/components/products/variant-picker'
 import formatCurrency from '@/lib/formatCurrency'
 import { db } from '@/server'
@@ -37,14 +38,17 @@ const Page = async ({ params }: SigleProductProps) => {
     })
 
     return (
-        <>{productWithVariants && <main>
-            <div></div>
-            <div>
+        <>{productWithVariants && <main className='flex gap-4 mt-6 items-center'>
+            <div className='flex-1'>
+                <ImageSlider variants={productWithVariants.product.productVariants} />
+            </div>
+            <div className='flex-1'>
                 <h2 className='font-bold text-2xl'>{productWithVariants.product.title}</h2>
                 <p className='text-xs bg-gray-200 font-medium w-fit p-1 rounded-md my-2'>
                     {productWithVariants.productType} Variant
                 </p>
-                <div dangerouslySetInnerHTML={{ __html: productWithVariants.product.description }} />
+                <hr className='mb-4 mt-3' />
+                <div className='leading-8' dangerouslySetInnerHTML={{ __html: productWithVariants.product.description }} />
                 <p className='text-xl font-bold my-2'>{formatCurrency(productWithVariants.product.price)} Ks</p>
                 <div className='flex gap-2 items-center'>
                     <p className='font-medium'>Colors:</p>

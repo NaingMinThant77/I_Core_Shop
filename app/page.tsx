@@ -10,7 +10,8 @@ export default async function Home() {
   return (
     <main>
       <h2>Nav</h2>
-      <Products productWithVariants={productWithVariants} />
+      {productWithVariants.length > 0 ? <Products productWithVariants={productWithVariants} />
+        : <p className="text-red-400 mt-4">There is no products with variants</p>}
     </main>
   );
 }
