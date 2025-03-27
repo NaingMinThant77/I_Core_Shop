@@ -8,7 +8,10 @@ import { Button } from '../ui/button';
 import { totalPriceCalc } from '@/lib/total-price';
 
 const CartItem = () => {
-    const { cart, removeFromCart, addToCart } = useCartStore((state) => state);
+    const cart = useCartStore((state) => state.cart);
+    const addToCart = useCartStore((state) => state.addToCart);
+    const removeFromCart = useCartStore((state) => state.removeFromCart);
+    const setCartPostion = useCartStore((state) => state.setCartPostion);
 
     return (
         <main className="lg:w-1/2 mx-auto">
@@ -57,7 +60,9 @@ const CartItem = () => {
                             </TableRow>
                         </TableFooter>
                     </Table>
-                    <Button size={"lg"} className='w-full mt-2 mb-6'>Place Order</Button>
+                    <Button size={"lg"} className='w-full mt-2 mb-6' onClick={() => setCartPostion("Checkout")}>
+                        Place Order
+                    </Button>
                 </div>
             )}
         </main>

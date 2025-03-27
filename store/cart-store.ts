@@ -18,6 +18,8 @@ export type CartType = {
     cart: CartItem[],
     addToCart: (item: CartItem) => void
     removeFromCart: (item: CartItem) => void
+    cartPostion: "Order" | "Checkout" | "Success"
+    setCartPostion: (position: "Order" | "Checkout" | "Success") => void
 }
 
 export const useCartStore = create(persist<CartType>((set) => ({
@@ -44,5 +46,8 @@ export const useCartStore = create(persist<CartType>((set) => ({
             return citem
         })
         return { cart: updateCart.filter((citem) => citem.variant.quantity > 0) }
-    })
+    }),
+    cartPostion: "Order",
+    setCartPostion: (position) => set({ cartPostion: position }),
+
 }), { name: "cart-storage" }))
