@@ -13,7 +13,8 @@ export const users = pgTable("user", {
     password: text("password"),
     image: text("image"),
     isTwoFactorEnabled: boolean("isTwoFactorEnabled").default(false),
-    role: RoleEnum("roles").default("user")
+    role: RoleEnum("roles").default("user"),
+    customerId: text("customerId"), // for stripe
 })
 
 export const twoFactorToken = pgTable("two_factor_token",
@@ -183,4 +184,24 @@ export const orderProduct = pgTable("orderProduct", {
         .references(() => productVariants.id, { onDelete: "cascade" }),
     productID: serial("productID").notNull()
         .references(() => products.id, { onDelete: "cascade" }),
+    orderID: serial("OrdeID").notNull()
+        .references(() => orders.id, { onDelete: "cascade" })
 })
+
+export const orderProductRelations = relations(orderProduct, ({ one }) => ({
+    order: one(orders, {
+        fields: [orderProduct.orderID],
+        references: [orders.id],
+        relationName: "orderProduct",
+    }),
+    product: one(products, {
+        fields: [orderProduct.productID],
+        references: [products.id],
+        relationName: "products",
+    }),
+    productVariants: one(productVariants, {
+        fields: [orderProduct.productVariantID],
+        references: [productVariants.id],
+        relationName: "productVariants",
+    }),
+}))
