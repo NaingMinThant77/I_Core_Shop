@@ -24,6 +24,7 @@ const CartItem = () => {
                     <Table>
                         <TableHeader>
                             <TableRow>
+                                <TableHead>No</TableHead>
                                 <TableHead>Product</TableHead>
                                 <TableHead>Image</TableHead>
                                 <TableHead>Quantity</TableHead>
@@ -31,8 +32,9 @@ const CartItem = () => {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {cart.map((citem) => (
+                            {cart.map((citem, index) => (
                                 <TableRow key={citem.id}>
+                                    <TableCell className="font-medium">{index + 1}</TableCell>
                                     <TableCell className="font-medium">{citem.name}</TableCell>
                                     <TableCell>
                                         <div><Image className="rounded-md" src={citem.image} alt={citem.name} width={50} height={50} /></div>
@@ -48,7 +50,7 @@ const CartItem = () => {
                         </TableBody>
                         <TableFooter>
                             <TableRow>
-                                <TableCell colSpan={3}>Total</TableCell>
+                                <TableCell colSpan={4}>Total</TableCell>
                                 <TableCell className="text-right">
                                     {formatCurrency(totalPriceCalc(cart))}
                                 </TableCell>

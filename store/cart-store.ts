@@ -1,4 +1,5 @@
 import { create } from "zustand"
+import { persist } from "zustand/middleware"
 
 export type Variant = {
     variantId: number,
@@ -19,7 +20,7 @@ export type CartType = {
     removeFromCart: (item: CartItem) => void
 }
 
-export const useCartStore = create<CartType>((set) => ({
+export const useCartStore = create(persist<CartType>((set) => ({
     cart: [],
     addToCart: (item) => set((state) => {
         const existingItem = state.cart.find((citem) => citem.variant.variantId === item.variant.variantId)
@@ -44,4 +45,4 @@ export const useCartStore = create<CartType>((set) => ({
         })
         return { cart: updateCart.filter((citem) => citem.variant.quantity > 0) }
     })
-}))
+}), { name: "cart-storage" }))
