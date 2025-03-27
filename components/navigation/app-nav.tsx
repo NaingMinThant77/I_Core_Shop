@@ -1,15 +1,19 @@
 import { auth } from "@/server/auth"
 import NavLogo from "./nav-logo"
 import UserButton from "./user-button"
+import CartBtn from "../cart/cart-button"
 
 const AppNav = async () => {
     const session = await auth()
-    console.log(session)
+
     return (
         <nav className="flex items-center justify-between py-4">
             <NavLogo />
-            <UserButton user={session?.user} expires={session?.expires!} />
-        </nav>
+            <div className="flex items-center gap-4 cursor-pointer">
+                <CartBtn />
+                {session?.user && <UserButton user={session.user} expires={session.expires!} />}
+            </div>
+        </nav >
     )
 }
 

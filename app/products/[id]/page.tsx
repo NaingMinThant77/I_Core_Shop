@@ -1,3 +1,4 @@
+import AddToCart from '@/components/cart/add-to-cart'
 import ImageSlider from '@/components/products/image-slider'
 import VariantPicker from '@/components/products/variant-picker'
 import formatCurrency from '@/lib/formatCurrency'
@@ -38,11 +39,11 @@ const Page = async ({ params }: SigleProductProps) => {
     })
 
     return (
-        <>{productWithVariants && <main className='flex gap-4 mt-6 items-center'>
-            <div className='flex-1'>
+        <>{productWithVariants && <main className='flex flex-col lg:flex-row gap-4 mt-6 pb=6'>
+            <div className='lg:flex-1'>
                 <ImageSlider variants={productWithVariants.product.productVariants} />
             </div>
-            <div className='flex-1'>
+            <div className='lg:flex-1'>
                 <h2 className='font-bold text-2xl'>{productWithVariants.product.title}</h2>
                 <p className='text-xs bg-gray-200 font-medium w-fit p-1 rounded-md my-2'>
                     {productWithVariants.productType} Variant
@@ -55,7 +56,9 @@ const Page = async ({ params }: SigleProductProps) => {
                     {productWithVariants.product.productVariants.map((v) => (
                         <VariantPicker key={v.id} {...v} title={productWithVariants.product.title} price={productWithVariants.product.price}
                             image={v.variantImage[0]?.image_url} productId={v.productID} />
-                    ))}</div>
+                    ))}
+                </div>
+                <AddToCart />
             </div>
         </main>}</>
     )

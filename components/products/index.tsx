@@ -12,7 +12,7 @@ const Products = ({ productWithVariants }: ProductsProps) => {
     return (
         <main className='grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
             {productWithVariants.map((p) => (
-                <Link href={`/products/${p.id}?productId=${p.product.id}&type=${p.productType}&image=${p.variantImage[0]?.image_url}&price=${p.product.price}`}
+                <Link href={`/products/${p.id}?vid=${p.id}&productId=${p.productID}&type=${p.productType}&image=${p.variantImage[0]?.image_url}&title=${p.product.title}&price=${p.product.price}`}
                     key={p.id} className='bg-white p-2 rounded-md overflow-hidden'>
                     <Image src={p.variantImage[0]?.image_url!} alt={p.product.title} width={400} height={400} className='w-60 h-40 object-cover' />
                     <hr className='my-2' />
