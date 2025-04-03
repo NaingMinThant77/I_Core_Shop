@@ -2,6 +2,8 @@ import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, Dr
 import CartItem from "./cart-item"
 import CartStatus from "./cart-status"
 import { useCartStore } from "@/store/cart-store"
+import Payment from "./payment"
+import Success from "./success"
 
 type CartDrawerProps = {
     children: React.ReactNode,
@@ -12,14 +14,15 @@ const CartDrawer = ({ children }: CartDrawerProps) => {
         <>
             <Drawer>
                 <DrawerTrigger>{children}</DrawerTrigger>
-                <DrawerContent>
+                <DrawerContent >
                     <DrawerHeader>
-                        <DrawerTitle>Your Cart</DrawerTitle>
-                        <DrawerDescription>Stay home. Stay safe.</DrawerDescription>
+                        <DrawerTitle className="text-2xl font-bold text-center">Your Cart</DrawerTitle>
+                        <DrawerDescription className="text-center mb-4">Stay home. Stay safe.</DrawerDescription>
                         <CartStatus />
                     </DrawerHeader>
                     {cartPosition === "Order" && <CartItem />}
-                    {cartPosition === "Checkout" && <p>I am order element.</p>}
+                    {cartPosition === "Checkout" && <Payment />}
+                    {cartPosition === "Success" && <Success />}
                 </DrawerContent>
             </Drawer >
 

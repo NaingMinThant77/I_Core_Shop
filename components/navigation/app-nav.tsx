@@ -11,7 +11,7 @@ const AppNav = async () => {
             <NavLogo />
             <div className="flex items-center gap-4 cursor-pointer">
                 <CartBtn />
-                {session?.user && <UserButton user={session.user} expires={session.expires!} />}
+                <UserButton user={session?.user!} expires={session?.expires!} />
             </div>
         </nav >
     )

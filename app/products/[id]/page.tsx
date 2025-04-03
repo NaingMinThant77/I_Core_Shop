@@ -50,7 +50,7 @@ const Page = async ({ params }: SigleProductProps) => {
                 </p>
                 <hr className='mb-4 mt-3' />
                 <div className='leading-8' dangerouslySetInnerHTML={{ __html: productWithVariants.product.description }} />
-                <p className='text-xl font-bold my-2'>{formatCurrency(productWithVariants.product.price)} Ks</p>
+                <p className='text-xl font-bold my-2'>{formatCurrency(Number(productWithVariants.product.price))} USD</p>
                 <div className='flex gap-2 items-center'>
                     <p className='font-medium'>Colors:</p>
                     {productWithVariants.product.productVariants.map((v) => (

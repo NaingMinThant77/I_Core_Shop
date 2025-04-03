@@ -17,7 +17,7 @@ const Products = ({ productWithVariants }: ProductsProps) => {
                     <Image src={p.variantImage[0]?.image_url!} alt={p.product.title} width={400} height={400} className='w-60 h-40 object-cover' />
                     <hr className='my-2' />
                     <h3 className='font-semibold'>{p.product.title.substring(0, 26) + "..."}</h3>
-                    <p className='font-medium text-sm mt-1'>{formatCurrency(p.product.price)} MMK</p>
+                    <p className='font-medium text-sm mt-1'> {formatCurrency(Number(p.product.price))} USD</p>
                 </Link>
             ))}
         </main>

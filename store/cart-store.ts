@@ -20,6 +20,7 @@ export type CartType = {
     removeFromCart: (item: CartItem) => void
     cartPostion: "Order" | "Checkout" | "Success"
     setCartPostion: (position: "Order" | "Checkout" | "Success") => void
+    clearCart: () => void
 }
 
 export const useCartStore = create(persist<CartType>((set) => ({
@@ -49,5 +50,6 @@ export const useCartStore = create(persist<CartType>((set) => ({
     }),
     cartPostion: "Order",
     setCartPostion: (position) => set({ cartPostion: position }),
+    clearCart: () => set({ cart: [] }),
 
 }), { name: "cart-storage" }))
