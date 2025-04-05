@@ -54,7 +54,15 @@ const Orders = async () => {
                                     <TableCell className="font-medium">{order.id}</TableCell>
                                     <TableCell>{formatCurrency(order.total)}</TableCell>
                                     <TableCell className="text-center">{order.created?.toString()}</TableCell>
-                                    <TableCell>{order.status === "pending" && <span className='text-white bg-orange-500 text-xs py-1 px-2 rounded-md'>{order.status}</span>}</TableCell>
+                                    <TableCell>
+                                        {order.status === "pending" && <span className='text-white bg-orange-500 text-xs py-1 px-2 rounded-md'>{order.status}</span>}
+                                        {order.status === "completed" && (
+                                            <span className="text-white bg-green-500 p-1 rounded text-xs font-medium">{order.status}</span>
+                                        )}
+                                        {order.status === "cancelled" && (
+                                            <span className="text-white bg-red-500 p-1 rounded text-xs font-medium">{order.status}</span>
+                                        )}
+                                    </TableCell>
                                     <TableCell className="text-right">
                                         <Dialog>
                                             <DialogTrigger className='underline'>View Details</DialogTrigger>
