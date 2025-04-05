@@ -86,7 +86,7 @@ const Orders = async () => {
                                                     <TableBody>
                                                         {
                                                             order.orderProduct.map(({ product, productVariants, quantity }) => (
-                                                                <TableRow>
+                                                                <TableRow key={product.id}>
                                                                     <TableCell className="font-medium">
                                                                         <Image width={50} height={50} src={productVariants.variantImage[0].image_url} alt={product.title} className='rounded-md' />
                                                                     </TableCell>
