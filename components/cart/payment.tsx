@@ -16,7 +16,7 @@ const Payment = () => {
     }, [])
 
     return (
-        <div>
+        <div className='px-4'>
             <Elements stripe={stripe} options={{
                 mode: "payment", currency: "usd", amount: totalPriceCalc(cart)
             }} >

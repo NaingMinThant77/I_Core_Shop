@@ -17,7 +17,7 @@ const CartDrawer = ({ children }: CartDrawerProps) => {
                 <DrawerContent >
                     <DrawerHeader>
                         <DrawerTitle className="text-2xl font-bold text-center">Your Cart</DrawerTitle>
-                        <DrawerDescription className="text-center mb-4">Stay home. Stay safe.</DrawerDescription>
+                        <DrawerDescription className="text-center mb-4">Thank for shopping with icore</DrawerDescription>
                         <CartStatus />
                     </DrawerHeader>
                     {cartPosition === "Order" && <CartItem />}
