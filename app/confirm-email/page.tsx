@@ -1,9 +1,11 @@
 import ConfirmEmail from '@/components/confirm-email'
-import React from 'react'
+import React, { Suspense } from 'react'
 
 const ConfirmEmailPage = () => {
     return (
-        <ConfirmEmail />
+        <Suspense fallback={<div>Loading...</div>}>
+            <ConfirmEmail />
+        </Suspense>
     )
 }
 
