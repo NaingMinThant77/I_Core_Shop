@@ -7,12 +7,6 @@ import { productVariants } from '@/server/schema'
 import { eq } from 'drizzle-orm'
 import React from 'react'
 
-type SigleProductProps = {
-    params: {
-        id: number
-    }
-}
-
 export async function generateStaticParams() {
     const data = await db.query.productVariants.findMany({
         with: { variantImage: true, variantTags: true, product: true }
@@ -24,9 +18,10 @@ export async function generateStaticParams() {
     return []
 }
 
-const Page = async ({ params }: SigleProductProps) => {
+const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
+    const { id } = await params
     const productWithVariants = await db.query.productVariants.findFirst({
-        where: eq(productVariants.id, params.id),
+        where: eq(productVariants.id, Number(id)),
         with: {
             product: {
                 with: {

@@ -31,7 +31,8 @@ const Products = async () => {
             variants: product.productVariants,
             image: product.productVariants[0].variantImage[0]?.image_url,
         };
-    })
+    }) as any[]
+
     return (
         <main>
             <DataTable columns={columns} data={productData} />
