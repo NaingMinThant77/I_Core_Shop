@@ -12,14 +12,18 @@ import { useAction } from "next-safe-action/hooks"
 import { register } from '@/server/actions/register-action';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
 const Register = () => {
-    const form = useForm({
+    const router = useRouter()
+    type RegisterFormType = z.infer<typeof registerSchema>;
+    const form = useForm<RegisterFormType>({
         resolver: zodResolver(registerSchema),
         defaultValues: {
             name: '',
             email: '',
-            password: ''
+            password: '',
+            role: 'user'
         }
     })
 
@@ -39,12 +43,13 @@ const Register = () => {
                     }
                 });
             }
+            router.push("/auth/login")
         }
     })
 
     const onSubmit = (values: z.infer<typeof registerSchema>) => {
-        const { name, email, password } = values
-        execute({ name, email, password })
+        const { name, email, password, role } = values
+        execute({ name, email, password, role })
     }
 
     return (
@@ -76,6 +81,18 @@ const Register = () => {
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>)} />
+                        <FormField name="role" control={form.control} render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Role</FormLabel>
+                                <FormControl>
+                                    <select {...field} className="w-full border rounded p-2 bg-white">
+                                        <option value="user">User</option>
+                                        <option value="admin">Admin</option>
+                                    </select>
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )} />
                         <Button type='submit' disabled={status === "executing"} className={cn("w-full my-4", status === "executing" && "animate-pulse")}>Register</Button>
                     </div>
                 </form>

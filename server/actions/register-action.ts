@@ -10,7 +10,7 @@ import { users } from "../schema";
 import { generateEmailVerificationToken } from "./token";
 import { sendEmail } from "./emails";
 
-export const register = actionClient.schema(registerSchema).action(async ({ parsedInput: { name, email, password } }) => {
+export const register = actionClient.schema(registerSchema).action(async ({ parsedInput: { name, email, password, role } }) => {
     const hashedPassword = await bcrypt.hash(password, 10)
 
     // check user exit
@@ -28,7 +28,7 @@ export const register = actionClient.schema(registerSchema).action(async ({ pars
     }
 
     // record user
-    await db.insert(users).values({ name, email, password: hashedPassword })
+    await db.insert(users).values({ name, email, password: hashedPassword, role })
     // generate verification email for email expires in 30 minutes
     const verificationToken = await generateEmailVerificationToken(email)
 
