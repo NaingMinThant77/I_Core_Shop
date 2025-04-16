@@ -8,3 +8,8 @@ export const createOrderSchema = z.object({
         productId: z.number(), quantity: z.number(), variantId: z.number()
     }))
 })
+
+export const updateOrderSchema = z.object({
+    status: z.enum(["pending", "completed", "cancelled"]),
+    id: z.number(),
+});

@@ -5,11 +5,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { auth } from '@/server/auth'
 import { redirect } from 'next/navigation'
 import { db } from '@/server'
-import { eq } from 'drizzle-orm'
+import { desc, eq } from 'drizzle-orm'
 import { orders } from '@/server/schema'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, } from "@/components/ui/dialog"
 import formatCurrency from '@/lib/formatCurrency'
 import Image from "next/image"
+
+import { format } from "date-fns";
+import OrderDropdown from "./order-dropdown";
 
 const Orders = async () => {
     const session = await auth()
@@ -26,7 +29,8 @@ const Orders = async () => {
                     },
                 }
             }
-        }
+        },
+        orderBy: [desc(orders.id)],
     })
 
     return (
@@ -44,7 +48,10 @@ const Orders = async () => {
                             <TableHead>Total</TableHead>
                             <TableHead className="text-center">Ordered on</TableHead>
                             <TableHead>Status</TableHead>
-                            <TableHead className="text-right">Action</TableHead>
+                            <TableHead className="text-right">User Action</TableHead>
+                            {session?.user?.role === "admin" && (
+                                <TableHead className="text-right">Admin action</TableHead>
+                            )}
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -53,9 +60,11 @@ const Orders = async () => {
                                 <TableRow key={order.id}>
                                     <TableCell className="font-medium">{order.id}</TableCell>
                                     <TableCell>{formatCurrency(order.total)}</TableCell>
-                                    <TableCell className="text-center">{order.created?.toString()}</TableCell>
+                                    <TableCell className="text-center">{format(new Date(order.created?.toString()!), "dd/MM/yyyy")}</TableCell>
                                     <TableCell>
-                                        {order.status === "pending" && <span className='text-white bg-orange-500 text-xs py-1 px-2 rounded-md'>{order.status}</span>}
+                                        {order.status === "pending" && (
+                                            <span className="text-white bg-orange-500 p-1 rounded text-xs font-medium">{order.status}</span>
+                                        )}
                                         {order.status === "completed" && (
                                             <span className="text-white bg-green-500 p-1 rounded text-xs font-medium">{order.status}</span>
                                         )}
@@ -101,10 +110,12 @@ const Orders = async () => {
                                                         }
                                                     </TableBody>
                                                 </Table>
-
                                             </DialogContent>
                                         </Dialog>
                                     </TableCell>
+                                    {session.user.role === "admin" && (
+                                        <TableCell className="text-right"><OrderDropdown id={order.id} /></TableCell>
+                                    )}
                                 </TableRow>
                             ))
                         }
